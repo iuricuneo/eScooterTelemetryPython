@@ -1,0 +1,160 @@
+<SettingsScreen>:
+
+    FloatLayout:
+
+        Label:                                    ## Title
+            text: 'Einstellungen'
+            pos_hint: { 'y': .44 }
+            color: 0, 0, 0, 1
+            font_size: 30
+
+        Button:                                   ## Return button
+            text: 'Zurueck'
+            on_press: root.back_from_settings()
+            size_hint: .1, .07
+            pos_hint: { 'x': 0.02, 'y': .91 }
+
+        Button:
+            text: 'Schliessen'
+            on_press: root.open_modal()
+            size_hint: .1, .07
+            pos_hint: { 'x': .88, 'y': .02 }
+
+        Label:
+            text: 'Aenderung der Farbe bei Aenderung der Geschwindigkeit'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .85}
+
+        Label:
+            text: 'Aenderung der Farbe, wenn Hauptakku schwach'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .77 }
+
+        Label:
+            text: 'Aenderung der Farbe, wenn kleine Akku schwach'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .69 }
+
+        Label:
+            text: 'Aenderung der Farbe, wenn Neigung hoch'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .61 }
+
+        Label:
+            text: 'Anzeige von Setup- und keine Batterie-Bilder'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .53 }
+
+        Label:
+            text: 'Anzeige des Geschwindigkeitsgraphen'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .45 }
+
+        Label:
+            text: 'Daten am Server senden'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .37 }
+
+        Label:
+            text: 'Daten senden am Server alle (Sekunden)'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .29 }
+
+        Label:
+            text: 'Laenge der X-Axe (Samples)'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'left'
+            size_hint: .50, .03
+            pos_hint: { 'x': .2, 'y': .21 }
+
+        Switch:
+            id: speedcolor
+            size_hint: .15, .05
+            active: True
+            pos_hint: { 'x': .7, 'y': .84}
+            on_active: root.speed_color(*args)
+
+        Switch:
+            id: battcolor
+            size_hint: .15, .05
+            active: True
+            pos_hint: { 'x': .7, 'y': .76}
+            on_active: root.batt_color(*args)
+
+        Switch:
+            id: lipocolor
+            size_hint: .15, .05
+            active: True
+            pos_hint: { 'x': .7, 'y': .68}
+            on_active: root.lipo_color(*args)
+
+        Switch:
+            id: inccolor
+            size_hint: .15, .05
+            active: True
+            pos_hint: { 'x': .7, 'y': .60}
+            on_active: root.inc_color(*args)
+
+        Switch:
+            id: stateimg
+            size_hint: .15, .05
+            active: True
+            pos_hint: { 'x': .7, 'y': .52}
+            on_active: root.state_img(*args)
+
+        Switch:
+            id: showgraph
+            size_hint: .15, .05
+            active: True
+            pos_hint: { 'x': .7, 'y': .44}
+            on_active: root.show_graph(*args)
+
+        Switch:
+            id: dataserver
+            size_hint: .15, .05
+            active: True
+            pos_hint: { 'x': .7, 'y': .36}
+            on_active: root.data_server(*args)
+
+        TextInput:
+            hint_text: 'Bitte Zeit eingeben'
+            text: str(root.settings['timeToSend'])
+            write_tab: False
+            id: timesend
+            multiline: False
+            size_hint: .15, .05
+            pos_hint: { 'x': .7, 'y': .28 }
+
+        TextInput:
+            hint_text: 'Bitte Samplesnummer eingeben'
+            text: str(root.settings['graphXAxis'])
+            write_tab: False
+            id: graphsamples
+            multiline: False
+            size_hint: .15, .05
+            pos_hint: { 'x': .7, 'y': .20 }

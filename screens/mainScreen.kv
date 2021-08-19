@@ -1,0 +1,210 @@
+#:kivy 1.10.0
+#:import utils kivy.utils
+
+<MainScreen>:
+
+    ## Defines screen layouts for the main screen, where the values
+    ## received via XBee will be shown to the user.
+    ## Shows 4 values: desired rotation, battery levels and accelerations.
+    ## Has 2 buttons, one to close and one to return to home screen.
+
+    FloatLayout:
+
+        Label:                                    ## Title
+            text: 'eScooterTelemetry'
+            pos_hint: { 'y': .44 }
+            color: 0, 0, 0, 1
+            font_size: 30
+        Button:                                   ## Return button
+            text: 'Zurueck'
+            on_press: root.stop_reading()
+            size_hint: .1, .07
+            pos_hint: { 'x': 0.02, 'y': .91 }
+        Button:                                   ## Exit button
+            text: 'Schliessen'
+            on_press: root.close_app()
+            size_hint: .1, .07
+            pos_hint: { 'x': .88, 'y': .91 }
+
+        Image:
+            source: root.state
+            allow_stretch: True
+            size_hint_x: .03
+            pos_hint: { 'x': 0.15, 'y': .443 }
+
+        Image:
+            source: root.mode
+            allow_stretch: True
+            size_hint_x: .03
+            pos_hint: { 'x': 0.22, 'y': .443 }
+
+        Image:
+            source: './img/signal.png' if root.signalImgCounter < root.numMsgToNoSignal else './img/no-signal.png'
+            allow_stretch: True
+            size_hint_x: .029 if root.signalImgCounter < root.numMsgToNoSignal else .03
+            pos_hint: { 'x': .751, 'y': .443} if root.signalImgCounter < root.numMsgToNoSignal else { 'x': .75, 'y': .445}
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, .89
+            pos: 0, 0
+            padding: 3, 0, 3, 3
+
+            BoxLayout:
+                padding: 0, 0, 0, 3
+                spacing: 3
+
+                ## Desired rotation
+
+                BoxLayout:
+                    padding: 0, 0, 3, 0
+                    orientation: 'vertical'
+                    canvas.before:
+                        Color:
+                            rgb: utils.get_color_from_hex(root.accel_state)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                    FloatLayout:
+
+                        Graph:
+                            id: graph_plot
+                            ylabel: ''
+                            y_grid_label: True
+                            x_grid_label: False
+                            y_ticks_major: 1000
+                            padding: 0
+                            xmin: 0
+                            xmax: root.settings['graphXAxis']
+                            ymin: 0
+                            ymax: 3000
+                            size_hint_y: root.settings['sizeYGraph']
+                            size_hint_x: .9
+                            border_color: [1, 1, 1, 0]
+                            tick_color: [1, 1, 1, 0]
+                            size_hint_y: .6
+                            pos_hint: {'x': .1, 'y': .3}
+
+                        Label:
+                            text: root.speed
+                            id: speedlabel
+                            font_size: 40
+                            pos_hint: { 'x': -.3 , 'y': -.35 }
+
+                        Label:
+                            text: 'U/min'
+                            pos_hint: { 'x': 0 , 'y': -.38 }
+
+                        Label:
+                            text: 'Solldrehzahl'
+                            pos_hint: { 'x': .3 , 'y': -.38 }
+
+                ## Main Battery level
+
+                BoxLayout:
+                    spacing: 3
+                    BoxLayout:
+                        id: mainbattlayout
+                        col: (200/255, 200/255, 200/255)
+                        orientation: 'vertical'
+                        padding: 0, 0, 3, 0
+                        canvas:
+                            Color:
+                                rgb: self.col
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        FloatLayout:
+                            LevelBar:
+                                max: 10
+                                value: str(float(root.batt) - 31)
+                                bg_color: '#c8c8c8'
+                                fill_color: '#57a85e' if self.value > 7 else '#d6d640' if self.value > 4 else '#c1763c'
+                                pos_hint: { 'x': .25, 'y': 0 }
+                                size_hint: .5, .95
+                        BoxLayout:
+                            size_hint: 1, .4
+                            orientation: 'vertical'
+                            Label:
+                                font_size: 25
+                                text: str(root.batt)+' V'
+                            Label:
+                                text: 'Hauptakku'
+
+                    ## Small Battery level
+
+                    BoxLayout:
+                        id: lipolayout
+                        orientation: 'vertical'
+                        col: (200/255, 200/255, 200/255)
+                        canvas:
+                            Color:
+                                rgb: self.col
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        FloatLayout:
+                            LevelBar:
+                                max: 35
+                                value: str(float(root.lipo)*10 - 130)
+                                bg_color: '#c8c8c8'
+                                fill_color: '#57a85e' if self.value > 24 else '#d6d640' if self.value > 14 else '#c1763c'
+                                pos_hint: { 'x': .25, 'y': 0 }
+                                size_hint: .5, .95
+                        BoxLayout:
+                            size_hint: 1, .4
+                            orientation: 'vertical'
+                            Label:
+                                font_size: 25
+                                text: str(root.lipo)+' V'
+                            Label:
+                                text: 'Kleine Akku'
+
+            ## Accelerations
+
+            FloatLayout:
+                id: accellayout
+                col: (200/255, 200/255, 200/255)
+                canvas:
+                    Color:
+                        rgb: self.col
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Button:
+                    id: accelbutton
+                    text: 'Beschleunigungen'
+                    background_down: ""
+                    background_normal: ""
+                    background_color: (200/255, 200/255, 200/255, 1)
+                    size_hint: .2, .15
+                    pos_hint: { 'x': .78, 'y': .02 }
+
+                FloatLayout:
+                    size_hint: .4, .7
+                    pos_hint: { 'x': .3, 'y': .15}
+
+                    Image:
+                        source: root.up_arrow
+                        size_hint_x: .2
+                        pos_hint: { 'x': -.2, 'y': .40}
+                    Image:
+                        source: root.down_arrow
+                        size_hint_x: .2
+                        pos_hint: { 'x': -.2, 'y': -.3}
+                    Image:
+                        source: root.left_arrow
+                        size_hint_x: .2
+                        pos_hint: { 'x': -.4, 'y': .05}
+                    Image:
+                        source: root.right_arrow
+                        size_hint_x: .2
+                        pos_hint: { 'x': 0, 'y': .03}
+
+                    Gauge:
+                        value: root.inclination
+                        id: gauge
+                        size_text: 0
+                        size_gauge: 350
+                        pos_hint: { 'x': .63, 'y': -.6 }

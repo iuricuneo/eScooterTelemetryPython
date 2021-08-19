@@ -1,0 +1,178 @@
+<HomeScreen>:
+
+    ## Home screen. Will be run when the program starts.
+    ## Its function is to receive parameters for XBee communication.
+    ## Has 6 fields for receiving parameters and 3 buttons, one of which
+    ## is a dropdown.
+
+    baudrate: baudrate
+    btn_dropdown: btn_dropdown
+    FloatLayout:
+
+        Button:                                 ## Next button
+            text: 'Naechste'
+            on_press: root.start_reading()
+            size_hint: .2, .1
+            pos_hint: { 'x': .4, 'y': .12}
+        Button:                                 ## Close button
+            text: 'Schliessen'
+            on_press: app.get_running_app().stop()
+            size_hint: .1, .07
+            pos_hint: { 'x': .88, 'y': .02 }
+        Button:
+            text: 'Eistellungen'
+            on_press: root.manager.current = 'settings'
+            size_hint: .13, .07
+            pos_hint: { 'x': .85, 'y': .91 }
+
+        ## Baudrate
+
+        Label:
+            text: 'Baudrate'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'right'
+            size_hint: .15, .03
+            pos_hint: { 'x': .1, 'y': .46 }
+        TextInput:
+            hint_text: 'Bitte Baudrate eingeben'
+            text: str(root.chosen_baudrate)
+            write_tab: False
+            id: baudrate
+            multiline: False
+            size_hint: .15, .05
+            pos_hint: { 'x': .3, 'y': .45 }
+
+        ## Stop bits
+
+        Label:
+            text: 'Stop Bits'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'right'
+            size_hint: .15, .03
+            pos_hint: { 'x': .1, 'y': .39 }
+        TextInput:
+            hint_text: 'Bitte Stopbits eingeben'
+            text: str(root.chosen_stopbits)
+            write_tab: False
+            id: stopbits
+            multiline: False
+            size_hint: .15, .05
+            pos_hint: { 'x': .3, 'y': .38 }
+
+        ## Parity
+
+        Label:
+            text: 'Parity'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'right'
+            size_hint: .15, .03
+            pos_hint: { 'x': .1, 'y': .32 }
+        TextInput:
+            hint_text: 'Bitte Parity eingeben'
+            text: 'None'
+            write_tab: False
+            id: parity
+            multiline: False
+            size_hint: .15, .05
+            pos_hint: { 'x': .3, 'y': .31 }
+
+        ## Byte size
+
+        Label:
+            text: 'Byte Size'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'right'
+            size_hint: .15, .03
+            pos_hint: { 'x': .5, 'y': .46 }
+        TextInput:
+            hint_text: 'Bitte Bytesize eingeben'
+            text: str(root.chosen_bytesize)
+            write_tab: False
+            id: bytesize
+            multiline: False
+            size_hint: .15, .05
+            pos_hint: { 'x': .7, 'y': .45 }
+
+        ## Timeout
+
+        Label:
+            text: 'Timeout'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'right'
+            size_hint: .15, .03
+            pos_hint: { 'x': .5, 'y': .39 }
+        TextInput:
+            hint_text: 'Bitte Timeout eingeben'
+            text: str(root.chosen_timeout)
+            write_tab: False
+            id: timeout
+            multiline: False
+            size_hint: .15, .05
+            pos_hint: { 'x': .7, 'y': .38 }
+
+        ## RTS/CTS
+
+        Label:
+            text: 'RTS/CTS'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'right'
+            size_hint: .15, .03
+            pos_hint: { 'x': .5, 'y': .32 }
+        TextInput:
+            hint_text: 'Bitte Rtscts eingeben'
+            text: str(root.chosen_rtscts)
+            write_tab: False
+            id: rtscts
+            multiline: False
+            size_hint: .15, .05
+            pos_hint: { 'x': .7, 'y': .31 }
+
+        # Data logging
+
+        Label:
+            text: 'Data Logging'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'right'
+            size_hint: .15, .03
+            pos_hint: { 'x': .1, 'y': .25 }
+        Switch:
+            id: datalog
+            size_hint: .15, .05
+            pos_hint: { 'x': .3, 'y': .24}
+            on_active: root.switch_callback(*args)
+
+        Label:
+            text: 'Log-Datei Name'
+            color: 0,0,0,1
+            text_size: self.size
+            halign: 'right'
+            size_hint: .15, .03
+            pos_hint: { 'x': .5, 'y': .25 }
+        Button:
+            text: root.filePath
+            size_hint: .15, .05
+            pos_hint: { 'x': .7, 'y': .24}
+            on_press: root.getFilePath()
+
+        ## Image
+
+        Image:
+            source: './img/thi_logo.png'
+            alow_stretch: True
+            size_hint_x: .3
+            pos_hint: { 'x': .345, 'y': .25}
+
+        ## Dropdown
+
+        Button:
+            id: btn_dropdown
+            text: 'Hier clicken, um Port auszuwaehlen' if root.chosen_port == '' else root.chosen_port
+            size_hint: .31, .07
+            pos_hint: { 'x': .35, 'y': .52}
